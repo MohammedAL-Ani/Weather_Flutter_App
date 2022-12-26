@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_flutter_app/weather/data/datasource/remote_datasource.dart';
 import 'package:weather_flutter_app/weather/data/repository/weather_repository.dart';
-import 'package:weather_flutter_app/weather/domain/enities/weather.dart';
+
+import 'package:weather_flutter_app/weather/domain/entities/weather.dart';
 import 'package:weather_flutter_app/weather/domain/repository/base_weather_repository.dart';
 import 'package:weather_flutter_app/weather/domain/usecases/get_weather_by_countory.dart';
 import 'package:weather_flutter_app/weather/presentaion/screens/home_screen.dart';

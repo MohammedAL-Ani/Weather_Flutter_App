@@ -1,6 +1,5 @@
+import '../entities/weather.dart';
 
-import '../enities/weather.dart';
-
-abstract class BaseWeatherRepository{
-  Future<Weather> getWeatherByCityName( String cityName);
+abstract class BaseWeatherRepository {
+  Future<Weather> getWeatherByCityName(String cityName);
 }

@@ -1,4 +1,4 @@
-import '../enities/weather.dart';
+import '../entities/weather.dart';
 import '../repository/base_weather_repository.dart';
 
 class GetWeatherByCountryName {
