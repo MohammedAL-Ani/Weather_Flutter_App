@@ -1,4 +1,5 @@
-class Weather {
+class Daily {
+  final int dt;
   final double temp;
   final double feelsLike;
   final double low;
@@ -9,6 +10,6 @@ class Weather {
   final double wind;
   final String icon;
 
-  Weather(this.temp, this.feelsLike, this.low, this.high, this.description,
-      this.pressure, this.humidity, this.wind, this.icon);
+  Daily(this.dt, this.temp, this.feelsLike, this.low, this.high,
+      this.description, this.pressure, this.humidity, this.wind, this.icon);
 }
