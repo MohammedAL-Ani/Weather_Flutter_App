@@ -1,13 +1,21 @@
 import 'package:equatable/equatable.dart';
-import 'package:weather_flutter_app/weather/domain/entities/daily.dart';
-import 'package:weather_flutter_app/weather/domain/entities/hourly.dart';
 
 class Forecast extends Equatable {
-  final List<Hourly> hourly;
-  final List<Daily> daily;
+  final int dt;
+  final double temp;
+  final String main;
+  final String dtTxt;
+  final String description;
+  final String icon;
 
-  const Forecast({required this.hourly, required this.daily});
+  const Forecast(
+      {required this.dt,
+      required this.temp,
+      required this.main,
+      required this.dtTxt,
+      required this.description,
+      required this.icon});
 
   @override
-  List<Object> get props => [hourly, daily];
+  List<Object> get props => [dt, temp, main, dtTxt, description, icon];
 }
