@@ -1,11 +1,13 @@
+import 'package:dartz/dartz.dart';
 import 'package:weather_flutter_app/weather/domain/entities/forecast.dart';
 
+import '../../../core/error/failure.dart';
 import '../entities/location.dart';
 import '../entities/weather.dart';
 
 abstract class BaseWeatherRepository {
-  Future<Weather> getWeatherByCityName(String cityName);
-  Future<Forecast> getForecastWeatherByLocation(
+  Future<Either<Failure, Weather>> getWeatherByCityName(String cityName);
+  Future<Either<Failure, Forecast>> getForecastWeatherByLocation(
       // Location location
       );
 }

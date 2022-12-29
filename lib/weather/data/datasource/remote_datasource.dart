@@ -2,17 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:weather_flutter_app/weather/data/models/forecast_model.dart';
 import 'package:weather_flutter_app/weather/domain/entities/location.dart';
 
-import '../../../core/utils/constants.dart';
+import '../../../core/network/api_constants.dart';
 import '../models/weather_model.dart';
 
-abstract class BaseRemoteDataSource {
+abstract class BaseWeatherRemoteDataSource {
   Future<WeatherModel?> getWeatherByCountryName(String countryName);
   Future<ForecastModel?> getForecastWeatherByLonAndLat(
       // Location location
       );
 }
 
-class RemoteDataSource implements BaseRemoteDataSource {
+class WeatherRemoteDataSource implements BaseWeatherRemoteDataSource {
   @override
   Future<WeatherModel?> getWeatherByCountryName(String countryName) async {
     {
