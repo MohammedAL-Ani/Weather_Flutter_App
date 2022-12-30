@@ -26,7 +26,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   }
   FutureOr<void> _getWeatherByCityName(
       GetWeatherByCountryNameEvent event, Emitter<WeatherState> emit) async {
-    final result = await getWeatherByCountryNameUseCase;
+    final result = await getWeatherByCountryNameUseCase(
+        CityNameParameters(cityName: event.cityName));
 
     result.fold(
       (l) => emit(state.copyWith(
@@ -40,19 +41,20 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     );
   }
 
-  FutureOr<void> _getForecastByLocation(
-      GetPopularMoviesEvent event, Emitter<MoviesState> emit) async {
-    final result = await getPopularMoviesUseCase(const NoParameters());
+  FutureOr<void> _getForecastByLocation(GetForecastWeatherByLocationEvent event,
+      Emitter<WeatherState> emit) async {
+    final result =
+        await getForecastWeatherByLocationUseCase(const NoParameters());
 
     result.fold(
       (l) => emit(state.copyWith(
-        popularMoviesMessage: l.message,
-        popularState: StateRequest.error,
+        getForecastByLocationMessage: l.message,
+        getForecastByLocationState: StateRequest.error,
       )),
       (r) => emit(
         state.copyWith(
-          popularMovies: r,
-          popularState: StateRequest.loaded,
+          getForecastByLocation: r,
+          getForecastByLocationState: StateRequest.loaded,
         ),
       ),
     );

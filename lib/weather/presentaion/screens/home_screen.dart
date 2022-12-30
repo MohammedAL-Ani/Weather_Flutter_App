@@ -1,15 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_flutter_app/core/utils/constants.dart';
+import 'package:weather_flutter_app/weather/presentaion/screens/components/toolbar_body.dart';
 
 import '../../../core/network/api_constants.dart';
+import '../../../core/services/services_locator.dart';
+import '../controller/weather_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key, required this.cityName}) : super(key: key);
+  final String cityName;
 
   @override
   Widget build(BuildContext context) {
-    String cityName = "Baghdad"; //city name
+    return Scaffold(
+        body: BlocProvider(
+      create: (BuildContext context) => sl<WeatherBloc>()
+        ..add(GetWeatherByCountryNameEvent(cityName))
+        ..add(GetForecastWeatherByLocationEvent()),
+      lazy: false,
+      child: const WeatherContent(),
+    ));
+  }
+}
+
+class WeatherContent extends StatelessWidget {
+  const WeatherContent({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     int currTemp = 30; // current temperature
     int maxTemp = 30; // today max temperature
     int minTemp = 2; // today min temperature
@@ -17,14 +38,13 @@ class HomeScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isDarkMode = brightness == Brightness.dark;
+
     return Scaffold(
       body: Center(
         child: Container(
           height: size.height,
           width: size.height,
-          decoration: BoxDecoration(
-            color: isDarkMode ? Colors.black : AppConstants.mainColor,
-          ),
+          decoration: dayBackgroundBoxDecoration(),
           child: SafeArea(
             child: Stack(
               children: [
@@ -32,96 +52,43 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Padding(
-                      //   padding: EdgeInsets.symmetric(
-                      //     vertical: size.height * 0.01,
-                      //     horizontal: size.width * 0.05,
-                      //   ),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: [
-                      //       GestureDetector(
-                      //         child: FaIcon(
-                      //           FontAwesomeIcons.bars,
-                      //           color: Colors.white,
-                      //         ),
-                      //         onTap: () {},
-                      //       ),
-                      //       Align(
-                      //         child: Text(
-                      //           'Weather App', //TODO: change app name
-                      //           style: GoogleFonts.questrial(
-                      //             color: Colors.white,
-                      //             fontSize: size.height * 0.02,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       FaIcon(
-                      //         FontAwesomeIcons.plusCircle,
-                      //         color: Colors.white,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      ToolbarBody(
+                      const ToolbarBody(
                         isOnTop: true,
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: size.height * 0.03,
+                          top: size.height * 0.1,
                         ),
-                        child: Align(
-                          child: Text(
-                            cityName,
-                            style: GoogleFonts.questrial(
-                              color: Colors.white,
-                              fontSize: size.height * 0.06,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: size.height * 0.009,
-                        ),
-                        child: Align(
-                          child: Text(
-                            'Today', //day
-                            style: GoogleFonts.questrial(
-                              color: isDarkMode ? Colors.white54 : Colors.white,
-                              fontSize: size.height * 0.035,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: size.height * 0.03,
-                        ),
-                        child: Align(
-                          child: Text(
-                            '$currTemp˚C', //curent temperature
-                            style: GoogleFonts.questrial(
-                              color: Colors.white,
-                              // color: currTemp <= 0
-                              //     ? Colors.blue
-                              //     : currTemp > 0 && currTemp <= 15
-                              //         ? Colors.indigo
-                              //         : currTemp > 15 && currTemp < 30
-                              //             ? Colors.deepPurple
-                              //             : Colors.white,
-                              fontSize: size.height * 0.13,
-                            ),
+                        child: Center(
+                          child: Stack(
+                            alignment: AlignmentDirectional.topEnd,
+                            children: [
+                              Text(
+                                '$currTemp', //curent temperature
+                                style: GoogleFonts.questrial(
+                                  color: AppColor.txtMainColor,
+                                  // color: currTemp <= 0
+                                  //     ? Colors.blue
+                                  //     : currTemp > 0 && currTemp <= 15
+                                  //         ? Colors.indigo
+                                  //         : currTemp > 15 && currTemp < 30
+                                  //             ? Colors.deepPurple
+                                  //             : Colors.white,
+                                  fontSize: size.height * 0.13,
+                                ),
+                              ),
+                              Text("˚C",
+                                  style: GoogleFonts.questrial(
+                                    color: AppColor.txtMainColor,
+                                    fontSize: size.height * 0.02,
+                                  ))
+                            ],
                           ),
                         ),
                       ),
                       Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: size.width * 0.25),
-                        child: Divider(
-                          color: Colors.white,
-                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
@@ -129,9 +96,11 @@ class HomeScreen extends StatelessWidget {
                         ),
                         child: Align(
                           child: Text(
-                            'Sunny', // weather
+                            'Cloudy', // weather
                             style: GoogleFonts.questrial(
-                              color: isDarkMode ? Colors.white54 : Colors.white,
+                              color: isDarkMode
+                                  ? Colors.white54
+                                  : AppColor.txtMainColor,
                               fontSize: size.height * 0.03,
                             ),
                           ),
@@ -142,45 +111,43 @@ class HomeScreen extends StatelessWidget {
                           top: size.height * 0.03,
                           bottom: size.height * 0.01,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '$minTemp˚C', // min temperature
-                              style: GoogleFonts.questrial(
-                                color: minTemp <= 0
-                                    ? Colors.blue
-                                    : minTemp > 0 && minTemp <= 15
-                                        ? Colors.indigo
-                                        : minTemp > 15 && minTemp < 30
-                                            ? Colors.deepPurple
-                                            : Colors.pink,
-                                fontSize: size.height * 0.03,
-                              ),
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: AppColor.subMainColor),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.wind_power,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                                SizedBox(
+                                  width: size.height * 0.01,
+                                ),
+                                Text("Wind",
+                                    style: GoogleFonts.questrial(
+                                      color: Colors.white.withOpacity(0.8),
+                                      fontSize: size.height * 0.016,
+                                    )),
+                                SizedBox(
+                                  width: size.height * 0.004,
+                                ),
+                                Text("26",
+                                    style: GoogleFonts.questrial(
+                                      color: Colors.white.withOpacity(0.8),
+                                      fontSize: size.height * 0.016,
+                                    ))
+                              ],
                             ),
-                            Text(
-                              '/',
-                              style: GoogleFonts.questrial(
-                                color:
-                                    isDarkMode ? Colors.white54 : Colors.white,
-                                fontSize: size.height * 0.03,
-                              ),
-                            ),
-                            Text(
-                              '$maxTemp˚C', //max temperature
-                              style: GoogleFonts.questrial(
-                                color: maxTemp <= 0
-                                    ? Colors.blue
-                                    : maxTemp > 0 && maxTemp <= 15
-                                        ? Colors.indigo
-                                        : maxTemp > 15 && maxTemp < 30
-                                            ? Colors.deepPurple
-                                            : Colors.pink,
-                                fontSize: size.height * 0.03,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.05,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -209,7 +176,7 @@ class HomeScreen extends StatelessWidget {
                                     style: GoogleFonts.questrial(
                                       color: isDarkMode
                                           ? Colors.white
-                                          : Colors.white,
+                                          : AppColor.txtMainColor,
                                       fontSize: size.height * 0.025,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -227,7 +194,7 @@ class HomeScreen extends StatelessWidget {
                                         "Now", //hour
                                         currTemp, //temperature
                                         20, //wind (km/h)
-                                        0, //rain chance (%)
+
                                         FontAwesomeIcons.sun, //weather icon
                                         size,
                                         isDarkMode,
@@ -236,7 +203,6 @@ class HomeScreen extends StatelessWidget {
                                         "15:00",
                                         1,
                                         10,
-                                        40,
                                         FontAwesomeIcons.cloud,
                                         size,
                                         isDarkMode,
@@ -245,7 +211,6 @@ class HomeScreen extends StatelessWidget {
                                         "16:00",
                                         0,
                                         25,
-                                        80,
                                         FontAwesomeIcons.cloudRain,
                                         size,
                                         isDarkMode,
@@ -254,7 +219,6 @@ class HomeScreen extends StatelessWidget {
                                         "17:00",
                                         -2,
                                         28,
-                                        60,
                                         FontAwesomeIcons.snowflake,
                                         size,
                                         isDarkMode,
@@ -263,7 +227,6 @@ class HomeScreen extends StatelessWidget {
                                         "18:00",
                                         -5,
                                         13,
-                                        40,
                                         FontAwesomeIcons.cloudMoon,
                                         size,
                                         isDarkMode,
@@ -272,7 +235,6 @@ class HomeScreen extends StatelessWidget {
                                         "19:00",
                                         -8,
                                         9,
-                                        60,
                                         FontAwesomeIcons.snowflake,
                                         size,
                                         isDarkMode,
@@ -281,7 +243,6 @@ class HomeScreen extends StatelessWidget {
                                         "20:00",
                                         -13,
                                         25,
-                                        50,
                                         FontAwesomeIcons.snowflake,
                                         size,
                                         isDarkMode,
@@ -290,7 +251,6 @@ class HomeScreen extends StatelessWidget {
                                         "21:00",
                                         -14,
                                         12,
-                                        40,
                                         FontAwesomeIcons.cloudMoon,
                                         size,
                                         isDarkMode,
@@ -299,7 +259,6 @@ class HomeScreen extends StatelessWidget {
                                         "22:00",
                                         -15,
                                         1,
-                                        30,
                                         FontAwesomeIcons.moon,
                                         size,
                                         isDarkMode,
@@ -308,7 +267,6 @@ class HomeScreen extends StatelessWidget {
                                         "23:00",
                                         -15,
                                         15,
-                                        20,
                                         FontAwesomeIcons.moon,
                                         size,
                                         isDarkMode,
@@ -331,7 +289,7 @@ class HomeScreen extends StatelessWidget {
                             borderRadius: const BorderRadius.all(
                               Radius.circular(10),
                             ),
-                            color: Colors.white.withOpacity(0.05),
+                            color: AppColor.subMainColor,
                           ),
                           child: Column(
                             children: [
@@ -443,307 +401,148 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget buildForecastToday(String time, int temp, int wind, int rainChance,
-      IconData weatherIcon, size, bool isDarkMode) {
-    return Padding(
-      padding: EdgeInsets.all(size.width * 0.025),
-      child: Column(
-        children: [
-          Text(
-            time,
-            style: GoogleFonts.questrial(
-              color: Colors.white,
-              fontSize: size.height * 0.02,
-            ),
+Widget buildForecastToday(String time, int temp, int wind, IconData weatherIcon,
+    size, bool isDarkMode) {
+  return Padding(
+    padding: EdgeInsets.all(size.width * 0.025),
+    child: Column(
+      children: [
+        Text(
+          time,
+          style: GoogleFonts.questrial(
+            color: AppColor.txtMainColor,
+            fontSize: size.height * 0.02,
           ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: size.height * 0.005,
-                ),
-                child: FaIcon(
-                  weatherIcon,
+        ),
+        SizedBox(
+          height: size.height * 0.01,
+        ),
+        Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: size.height * 0.005,
+              ),
+              child: FaIcon(
+                weatherIcon,
+                color: AppColor.txtMainColor,
+                size: size.height * 0.03,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: size.height * 0.01,
+        ),
+        Text(
+          '$temp˚C',
+          style: GoogleFonts.questrial(
+            color: AppColor.txtMainColor,
+            fontSize: size.height * 0.025,
+          ),
+        ),
+        SizedBox(
+          height: size.height * 0.01,
+        ),
+        Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: size.height * 0.01,
+              ),
+              child: FaIcon(
+                FontAwesomeIcons.wind,
+                color: Colors.grey,
+                size: size.height * 0.03,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: size.height * 0.01,
+        ),
+        Text(
+          '$wind km/h',
+          style: GoogleFonts.questrial(
+            color: Colors.grey,
+            fontSize: size.height * 0.02,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buildSevenDayForecast(String time, int minTemp, int maxTemp,
+    IconData weatherIcon, size, bool isDarkMode) {
+  return Padding(
+    padding: EdgeInsets.all(
+      size.height * 0.005,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.02,
+              ),
+              child: Text(
+                time,
+                style: GoogleFonts.questrial(
                   color: Colors.white,
-                  size: size.height * 0.03,
+                  fontSize: size.height * 0.025,
                 ),
               ),
-            ],
-          ),
-          Text(
-            '$temp˚C',
-            style: GoogleFonts.questrial(
-              color: Colors.white,
-              fontSize: size.height * 0.025,
             ),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: size.height * 0.01,
-                ),
-                child: FaIcon(
-                  FontAwesomeIcons.wind,
-                  color: Colors.grey,
-                  size: size.height * 0.03,
-                ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.25,
               ),
-            ],
-          ),
-          Text(
-            '$wind km/h',
-            style: GoogleFonts.questrial(
-              color: Colors.grey,
-              fontSize: size.height * 0.02,
-            ),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: size.height * 0.01,
-                ),
-                child: FaIcon(
-                  FontAwesomeIcons.umbrella,
-                  color: Colors.blue,
-                  size: size.height * 0.03,
-                ),
+              child: FaIcon(
+                weatherIcon,
+                color: Colors.white,
+                size: size.height * 0.03,
               ),
-            ],
-          ),
-          Text(
-            '$rainChance %',
-            style: GoogleFonts.questrial(
-              color: Colors.blue,
-              fontSize: size.height * 0.02,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildSevenDayForecast(String time, int minTemp, int maxTemp,
-      IconData weatherIcon, size, bool isDarkMode) {
-    return Padding(
-      padding: EdgeInsets.all(
-        size.height * 0.005,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.02,
+            Align(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: size.width * 0.15,
                 ),
                 child: Text(
-                  time,
+                  '$minTemp˚C',
+                  style: GoogleFonts.questrial(
+                    color: isDarkMode ? Colors.white38 : Colors.white,
+                    fontSize: size.height * 0.025,
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.05,
+                ),
+                child: Text(
+                  '$maxTemp˚C',
                   style: GoogleFonts.questrial(
                     color: Colors.white,
                     fontSize: size.height * 0.025,
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.25,
-                ),
-                child: FaIcon(
-                  weatherIcon,
-                  color: Colors.white,
-                  size: size.height * 0.03,
-                ),
-              ),
-              Align(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    left: size.width * 0.15,
-                  ),
-                  child: Text(
-                    '$minTemp˚C',
-                    style: GoogleFonts.questrial(
-                      color: isDarkMode ? Colors.white38 : Colors.white,
-                      fontSize: size.height * 0.025,
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.05,
-                  ),
-                  child: Text(
-                    '$maxTemp˚C',
-                    style: GoogleFonts.questrial(
-                      color: Colors.white,
-                      fontSize: size.height * 0.025,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Divider(
-            color: Colors.white,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ToolbarBody extends StatefulWidget {
-  const ToolbarBody({Key? key, required this.isOnTop}) : super(key: key);
-  final bool isOnTop;
-
-  @override
-  _ToolbarBodyState createState() => _ToolbarBodyState();
-}
-
-class _ToolbarBodyState extends State<ToolbarBody> {
-  bool _showSearch = false;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppConstants.mainColor,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 20),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                height: 58,
-                child: Stack(
-                  children: [
-                    // if(widget.isOnTop)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          AnimatedOpacity(
-                            opacity: widget.isOnTop ? 1 : 0,
-                            duration: const Duration(milliseconds: 300),
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: Container(
-                                    padding: const EdgeInsets.all(14),
-                                    decoration: BoxDecoration(
-                                        color: AppConstants.mainColor,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            width: 1,
-                                            color:
-                                                Colors.white.withOpacity(.02))),
-                                    child: const Icon(
-                                      Icons.menu,
-                                      size: 20,
-                                      color: Colors.white,
-                                    )),
-                              ),
-                            ),
-                          ),
-                          if ((!_showSearch))
-                            Expanded(
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10),
-                                  child: Text("Find Weather of your city",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        overflow: TextOverflow.ellipsis,
-                                      )),
-                                ),
-                              ),
-                            ),
-                          Container(
-                            width: 78,
-                          )
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.bounceOut,
-                        width: _showSearch == true
-                            ? MediaQuery.of(context).size.width -
-                                (widget.isOnTop ? 95 : 0)
-                            : 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: AppConstants.mainColor,
-                            // gradient: AppGradient.gradient[1],
-                            border: Border.all(
-                                width: 1,
-                                color: Colors.white.withOpacity(.02))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (_showSearch)
-                              Container(
-                                height: double.infinity,
-                                width: 10,
-                              ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _showSearch = !_showSearch;
-                                });
-                              },
-                              child: const Icon(
-                                Icons.search,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                            ),
-                            if (_showSearch)
-                              Container(
-                                height: double.infinity,
-                                width: 10,
-                              ),
-                            if (_showSearch)
-                              Expanded(
-                                child: TextFormField(
-                                  // controller: widget.searchController,
-                                  decoration: InputDecoration(
-                                    hintStyle: TextStyle(color: Colors.white),
-                                    hintText: "Find Weather of your city",
-                                  ),
-                                  keyboardType: TextInputType.text,
-                                ),
-                                flex: 1,
-                              )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 1,
-            color: Colors.white.withOpacity(.05),
-          )
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+        Divider(
+          color: Colors.white,
+        ),
+      ],
+    ),
+  );
 }

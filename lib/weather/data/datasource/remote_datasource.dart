@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:weather_flutter_app/weather/data/models/forecast_model.dart';
 import 'package:weather_flutter_app/weather/domain/entities/location.dart';
+import 'package:weather_flutter_app/weather/domain/usecases/get_weather_by_countory.dart';
 
 import '../../../core/network/api_constants.dart';
 import '../models/weather_model.dart';
 
 abstract class BaseWeatherRemoteDataSource {
-  Future<WeatherModel?> getWeatherByCountryName(String countryName);
+  Future<WeatherModel?> getWeatherByCountryName(CityNameParameters parameters);
   Future<ForecastModel?> getForecastWeatherByLonAndLat(
       // Location location
       );
@@ -14,11 +15,12 @@ abstract class BaseWeatherRemoteDataSource {
 
 class WeatherRemoteDataSource implements BaseWeatherRemoteDataSource {
   @override
-  Future<WeatherModel?> getWeatherByCountryName(String countryName) async {
+  Future<WeatherModel?> getWeatherByCountryName(
+      CityNameParameters parameters) async {
     {
       try {
         var response = await Dio().get(
-            '${AppConstants.baseURL}/weather?q=$countryName&appid=${AppConstants.appKey}');
+            '${AppConstants.baseURL}/weather?q=$parameters&appid=${AppConstants.appKey}');
         print(response);
         return WeatherModel.fromJson(response.data);
       } catch (e) {
