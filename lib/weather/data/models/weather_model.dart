@@ -10,10 +10,10 @@ class WeatherModel extends Weather {
       required super.pressure,
       required super.humidity,
       required super.wind,
+      required super.windDeg,
       required super.icon});
 
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
-    print(json);
     return WeatherModel(
       temp: json['main']['temp'].toDouble(),
       feelsLike: json['main']['feels_like'].toDouble(),
@@ -23,6 +23,7 @@ class WeatherModel extends Weather {
       pressure: json['main']['pressure'].toDouble(),
       humidity: json['main']['humidity'].toDouble(),
       wind: json['wind']['speed'].toDouble(),
+      windDeg: json['wind']['deg'].toInt(),
       icon: json['weather'][0]['icon'],
     );
   }

@@ -10,7 +10,7 @@ import '../entities/weather.dart';
 abstract class BaseWeatherRepository {
   Future<Either<Failure, Weather>> getWeatherByCityName(
       CityNameParameters parameters);
-  Future<Either<Failure, Forecast>> getForecastWeatherByLocation(
+  Future<Either<Failure, List<Forecast>>> getForecastWeatherByLocation(
       // Location location
       );
 }

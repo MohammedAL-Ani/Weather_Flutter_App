@@ -21,21 +21,22 @@ class WeatherRepository implements BaseWeatherRepository {
     final result =
         await baseRemoteDataSource.getWeatherByCountryName(parameters);
     try {
-      return Right(result!);
+      return Right(result);
     } on ServerException catch (failure) {
       return Left(ServerFailure(failure.errorMessageModel.statusMessage));
     }
   }
 
   @override
-  Future<Either<Failure, Forecast>> getForecastWeatherByLocation(
+  Future<Either<Failure, List<Forecast>>> getForecastWeatherByLocation(
       // Location location
       ) async {
     final result =
         await baseRemoteDataSource.getForecastWeatherByLonAndLat(// location
             );
+
     try {
-      return Right(result!);
+      return Right(result);
     } on ServerException catch (failure) {
       return Left(ServerFailure(failure.errorMessageModel.statusMessage));
     }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:weather_flutter_app/core/services/services_locator.dart';
 import 'package:weather_flutter_app/weather/presentaion/screens/begin_screen.dart';
 
 import 'package:weather_flutter_app/weather/presentaion/screens/home_screen.dart';
 
-void main() async {
+void main() {
   // BaseWeatherRemoteDataSource baseRemoteDataSource = WeatherRemoteDataSource();
   // BaseWeatherRepository baseWeatherRepository =
   // WeatherRepository(baseRemoteDataSource);
@@ -18,7 +19,7 @@ void main() async {
   // print(stringFormat);
   // print(FormatDate.getMonthString(moonLanding.weekday));
   // print(moonLanding2);
-
+  ServicesLocator().init();
   runApp(const MyApp());
 }
 
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(),
       home: const BeginScreen(),
     );

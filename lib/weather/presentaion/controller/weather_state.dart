@@ -4,7 +4,7 @@ class WeatherState extends Equatable {
   final Weather? getWeatherByCityName;
   final StateRequest getWeatherByCityNameState;
   final String getWeatherByCityNameMessage;
-  final Forecast? getForecastByLocation;
+  final List<Forecast> getForecastByLocation;
   final StateRequest getForecastByLocationState;
   final String getForecastByLocationMessage;
 
@@ -12,7 +12,7 @@ class WeatherState extends Equatable {
     this.getWeatherByCityName,
     this.getWeatherByCityNameState = StateRequest.loading,
     this.getWeatherByCityNameMessage = "",
-    this.getForecastByLocation,
+    this.getForecastByLocation = const [],
     this.getForecastByLocationState = StateRequest.loading,
     this.getForecastByLocationMessage = "",
   });
@@ -21,7 +21,7 @@ class WeatherState extends Equatable {
     Weather? getWeatherByCityName,
     StateRequest? getWeatherByCityNameState,
     String? getWeatherByCityNameMessage,
-    Forecast? getForecastByLocation,
+    List<Forecast>? getForecastByLocation,
     StateRequest? getForecastByLocationState,
     String? getForecastByLocationMessage,
   }) {

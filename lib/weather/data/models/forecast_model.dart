@@ -4,17 +4,19 @@ class ForecastModel extends Forecast {
   const ForecastModel(
       {required super.dt,
       required super.temp,
-      required super.main,
+      required super.high,
+      required super.low,
       required super.dtTxt,
-      required super.description,
+      required super.wind,
       required super.icon});
 
   factory ForecastModel.fromJson(Map<String, dynamic> json) => ForecastModel(
-        dt: json['list'][0]['dt'].toInt(),
-        temp: json['list'][0]['main']['temp'].toDouble(),
-        main: json['list'][0]['weather'][0]['main'],
-        dtTxt: json['list'][0]['dt_txt'],
-        description: json['list'][0]['weather'][0]['description'],
-        icon: json['list'][0]['weather'][0]['icon'],
+        dt: json['dt'].toInt(),
+        temp: json['main']['temp'].toDouble(),
+        low: json['main']['temp_min'].toDouble(),
+        high: json['main']['temp_max'].toDouble(),
+        dtTxt: json['dt_txt'],
+        wind: json['wind']['speed'].toDouble(),
+        icon: json['weather'][0]['icon'],
       );
 }

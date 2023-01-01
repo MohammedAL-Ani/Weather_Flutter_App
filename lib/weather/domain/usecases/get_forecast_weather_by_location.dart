@@ -7,13 +7,13 @@ import '../entities/location.dart';
 import '../repository/base_weather_repository.dart';
 
 class GetForecastWeatherByLocationUseCase
-    extends BaseUseCase<Forecast, NoParameters> {
+    extends BaseUseCase<List<Forecast>, NoParameters> {
   final BaseWeatherRepository repository;
 
   GetForecastWeatherByLocationUseCase(this.repository);
 
   @override
-  Future<Either<Failure, Forecast>> call(NoParameters parameters
+  Future<Either<Failure, List<Forecast>>> call(NoParameters parameters
       // Location location
       ) async {
     return await repository.getForecastWeatherByLocation(
