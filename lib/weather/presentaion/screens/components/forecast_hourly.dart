@@ -65,6 +65,7 @@ class ForecastHourlyComponents extends StatelessWidget {
                                   offset: Offset(
                                       0, 1), // changes position of shadow
                                 )
+
                               ]),
                           child: Column(children: [
                             Text(
