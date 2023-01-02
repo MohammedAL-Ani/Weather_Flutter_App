@@ -43,7 +43,6 @@ class WeatherRemoteDataSource implements BaseWeatherRemoteDataSource {
       var response = await Dio().get(
           '${ApiConstants.baseURL}/forecast?lat=33.34&lon=44.40&appid=${ApiConstants.apiKey}');
       if (response.statusCode == 200) {
-        print(response.data["list"]);
         return List<ForecastModel>.from((response.data["list"] as List).map(
           (e) => ForecastModel.fromJson(e),
         ));

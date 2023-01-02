@@ -269,8 +269,27 @@ class WeatherContent extends StatelessWidget {
                                     SizedBox(
                                       height: size.height * 0.05,
                                     ),
-                                    ForecastHourlyComponents(),
-                                    ForecastWeekDay(),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          top: size.height * 0.01,
+                                          left: size.width * 0.03,
+                                        ),
+                                        child: Text(
+                                          'Forecast for today',
+                                          style: GoogleFonts.questrial(
+                                            color: isDarkMode
+                                                ? Colors.white
+                                                : AppColor.txtMainColor,
+                                            fontSize: size.height * 0.025,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const ForecastHourlyComponents(),
+                                    const ForecastWeekDay(),
                                   ]),
                             ),
                           ],

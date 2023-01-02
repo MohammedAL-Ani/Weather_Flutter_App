@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/utils/constants.dart';
 import '../../../../core/utils/state_request.dart';
+import '../../../domain/entities/forecast.dart';
 import '../../controller/weather_bloc.dart';
 
 class ForecastHourlyComponents extends StatelessWidget {
@@ -24,12 +25,11 @@ class ForecastHourlyComponents extends StatelessWidget {
 
     return BlocBuilder<WeatherBloc, WeatherState>(
       buildWhen: (previous, current) =>
-          previous.getWeatherByCityNameState !=
-          current.getWeatherByCityNameState,
+          previous.getForecastByLocationState !=
+          current.getForecastByLocationState,
       builder: (context, state) {
         print("BlocBuilder ForecastsHourlyContentComponent");
-        var forecastHourly = state.getForecastByLocation;
-        print(forecastHourly);
+
         switch (state.getForecastByLocationState) {
           case StateRequest.loading:
             return const SizedBox(
@@ -39,213 +39,151 @@ class ForecastHourlyComponents extends StatelessWidget {
               ),
             );
           case StateRequest.loaded:
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.05,
-              ),
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                    color: isDarkMode
-                        ? Colors.white.withOpacity(0.05)
-                        : Colors.black.withOpacity(0.05),
-                  ),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: size.height * 0.01,
-                            left: size.width * 0.03,
-                          ),
-                          child: Text(
-                            'Forecast for today',
-                            style: GoogleFonts.questrial(
-                              color: isDarkMode
-                                  ? Colors.white
-                                  : AppColor.txtMainColor,
-                              fontSize: size.height * 0.025,
-                              fontWeight: FontWeight.bold,
+            return Container(
+                margin: EdgeInsets.symmetric(vertical: 0.0),
+                height: 150.0,
+                child: ListView.builder(
+                    padding: const EdgeInsets.only(
+                        left: 8, top: 0, bottom: 0, right: 8),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.getForecastByLocation.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var forecastHourly = state.getForecastByLocation[index];
+                      return Container(
+                          padding: const EdgeInsets.only(
+                              left: 10, top: 15, bottom: 15, right: 10),
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  spreadRadius: 2,
+                                  blurRadius: 2,
+                                  offset: Offset(
+                                      0, 1), // changes position of shadow
+                                )
+                              ]),
+                          child: Column(children: [
+                            Text(
+                              "${forecastHourly.temp}°",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                  color: Colors.black),
                             ),
-                          ),
-                        ),
-                      ),
-                      // DateFormat('EEEE').format(DateTime.parse(forecastHourly.dtTxt)
-                      ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          // physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: forecastHourly.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: EdgeInsets.all(size.width * 0.025),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    DateFormat('EEEE').format(DateTime.parse(
-                                        forecastHourly[index].dtTxt)),
-                                    style: GoogleFonts.questrial(
-                                      color: AppColor.txtMainColor,
-                                      fontSize: size.height * 0.02,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: size.height * 0.01,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: size.height * 0.005,
-                                          ),
-                                          child: Image.asset(
-                                            "assets/images/${forecastHourly[index].icon}.png",
-                                            width: 40,
-                                          )),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: size.height * 0.01,
-                                  ),
-                                  Text(
-                                    '${forecastHourly[index].temp}˚C',
-                                    style: GoogleFonts.questrial(
-                                      color: AppColor.txtMainColor,
-                                      fontSize: size.height * 0.025,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: size.height * 0.01,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: size.height * 0.01,
-                                        ),
-                                        child: FaIcon(
-                                          FontAwesomeIcons.wind,
-                                          color: Colors.grey,
-                                          size: size.height * 0.03,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: size.height * 0.01,
-                                  ),
-                                  Text(
-                                    '${forecastHourly[index].wind} km/h',
-                                    style: GoogleFonts.questrial(
-                                      color: Colors.grey,
-                                      fontSize: size.height * 0.02,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-
-                      // Padding(
-                      //   padding: EdgeInsets.all(size.width * 0.005),
-                      //   child: SingleChildScrollView(
-                      //     scrollDirection: Axis.horizontal,
-                      //     child: Row(
-                      //       children: [
-                      //         buildForecastToday(
-                      //           DateFormat('EEEE').format(DateTime.parse(
-                      //               state.getForecastByLocation!.dtTxt)), //hour
-                      //           state.getForecastByLocation!.temp
-                      //               .toInt(), //temperature
-                      //           state.getForecastByLocation!
-                      //               .description, //wind (km/h)
-                      //
-                      //           state.getForecastByLocation!.icon, //weather icon
-                      //           size,
-                      //           isDarkMode,
-                      //         ),
-                      // buildForecastToday(
-                      //   "15:00",
-                      //   1,
-                      //   10,
-                      //   FontAwesomeIcons.cloud,
-                      //   size,
-                      //   isDarkMode,
-                      // ),
-                      // buildForecastToday(
-                      //   "16:00",
-                      //   0,
-                      //   25,
-                      //   FontAwesomeIcons.cloudRain,
-                      //   size,
-                      //   isDarkMode,
-                      // ),
-                      // buildForecastToday(
-                      //   "17:00",
-                      //   -2,
-                      //   28,
-                      //   FontAwesomeIcons.snowflake,
-                      //   size,
-                      //   isDarkMode,
-                      // ),
-                      // buildForecastToday(
-                      //   "18:00",
-                      //   -5,
-                      //   13,
-                      //   FontAwesomeIcons.cloudMoon,
-                      //   size,
-                      //   isDarkMode,
-                      // ),
-                      // buildForecastToday(
-                      //   "19:00",
-                      //   -8,
-                      //   9,
-                      //   FontAwesomeIcons.snowflake,
-                      //   size,
-                      //   isDarkMode,
-                      // ),
-                      // buildForecastToday(
-                      //   "20:00",
-                      //   -13,
-                      //   25,
-                      //   FontAwesomeIcons.snowflake,
-                      //   size,
-                      //   isDarkMode,
-                      // ),
-                      // buildForecastToday(
-                      //   "21:00",
-                      //   -14,
-                      //   12,
-                      //   FontAwesomeIcons.cloudMoon,
-                      //   size,
-                      //   isDarkMode,
-                      // ),
-                      // buildForecastToday(
-                      //   "22:00",
-                      //   -15,
-                      //   1,
-                      //   FontAwesomeIcons.moon,
-                      //   size,
-                      //   isDarkMode,
-                      // ),
-                      // buildForecastToday(
-                      //   "23:00",
-                      //   -15,
-                      //   15,
-                      //   FontAwesomeIcons.moon,
-                      //   size,
-                      //   isDarkMode,
-                      // ),
-                      //     ],
-                      //   ),
-                      // ),
-                      // ),
-                    ],
-                  )),
-            );
+                            getWeatherIcon(forecastHourly.icon),
+                            Text(
+                              "${getTimeFromTimestamp(forecastHourly.dt)}",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  color: Colors.grey),
+                            ),
+                          ]));
+                    }));
+          // return ListView.builder(
+          //     scrollDirection: Axis.horizontal,
+          //     // physics: NeverScrollableScrollPhysics(),
+          //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          //     shrinkWrap: true,
+          //     itemCount: state.getForecastByLocation.length,
+          //     itemBuilder: (BuildContext context, int index) {
+          //       var forecastHourly = state.getForecastByLocation[index];
+          //       // print(forecastHourly);
+          //       return Padding(
+          //         padding: EdgeInsets.all(size.width * 0.025),
+          //         child: Column(
+          //           mainAxisAlignment: MainAxisAlignment.start,
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             Text(
+          //               DateFormat('EEEE')
+          //                   .format(DateTime.parse(forecastHourly.dtTxt)),
+          //               style: GoogleFonts.questrial(
+          //                 color: AppColor.txtMainColor,
+          //                 fontSize: size.height * 0.02,
+          //               ),
+          //             ),
+          //             SizedBox(
+          //               height: size.height * 0.01,
+          //             ),
+          //             Row(
+          //               children: [
+          //                 Padding(
+          //                     padding: EdgeInsets.symmetric(
+          //                       vertical: size.height * 0.005,
+          //                     ),
+          //                     child: Image.asset(
+          //                       "assets/images/${forecastHourly.icon}.png",
+          //                       width: 40,
+          //                     )),
+          //               ],
+          //             ),
+          //             SizedBox(
+          //               height: size.height * 0.01,
+          //             ),
+          //             Text(
+          //               '${forecastHourly.temp}˚C',
+          //               style: GoogleFonts.questrial(
+          //                 color: AppColor.txtMainColor,
+          //                 fontSize: size.height * 0.025,
+          //               ),
+          //             ),
+          //             SizedBox(
+          //               height: size.height * 0.01,
+          //             ),
+          //             Row(
+          //               children: [
+          //                 Padding(
+          //                   padding: EdgeInsets.symmetric(
+          //                     vertical: size.height * 0.01,
+          //                   ),
+          //                   child: FaIcon(
+          //                     FontAwesomeIcons.wind,
+          //                     color: Colors.grey,
+          //                     size: size.height * 0.03,
+          //                   ),
+          //                 ),
+          //               ],
+          //             ),
+          //             SizedBox(
+          //               height: size.height * 0.01,
+          //             ),
+          //             Text(
+          //               '${forecastHourly.wind} km/h',
+          //               style: GoogleFonts.questrial(
+          //                 color: Colors.grey,
+          //                 fontSize: size.height * 0.02,
+          //               ),
+          //             ),
+          //             Text(
+          //               '${forecastHourly.dt} km/h',
+          //               style: GoogleFonts.questrial(
+          //                 color: Colors.grey,
+          //                 fontSize: size.height * 0.02,
+          //               ),
+          //             ),
+          //             Text(
+          //               '${forecastHourly.high} km/h',
+          //               style: GoogleFonts.questrial(
+          //                 color: Colors.grey,
+          //                 fontSize: size.height * 0.02,
+          //               ),
+          //             ),
+          //             Text(
+          //               '${forecastHourly.low} km/h',
+          //               style: GoogleFonts.questrial(
+          //                 color: Colors.grey,
+          //                 fontSize: size.height * 0.02,
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       );
+          //     });
           case StateRequest.error:
             return SizedBox(
               height: 400,
@@ -259,160 +197,266 @@ class ForecastHourlyComponents extends StatelessWidget {
   }
 }
 
-class ForecastHourly extends StatelessWidget {
-  final String time;
-  final int temp;
-  final String wind;
-  final String weatherIcon;
-  final Size size;
-  final bool isDarkMode;
-  const ForecastHourly(
-      {Key? key,
-      required this.time,
-      required this.temp,
-      required this.wind,
-      required this.weatherIcon,
-      required this.isDarkMode,
-      required this.size})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(size.width * 0.025),
-      child: Column(
-        children: [
-          Text(
-            time,
-            style: GoogleFonts.questrial(
-              color: AppColor.txtMainColor,
-              fontSize: size.height * 0.02,
-            ),
-          ),
-          SizedBox(
-            height: size.height * 0.01,
-          ),
-          Row(
-            children: [
-              Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: size.height * 0.005,
-                  ),
-                  child: Image.asset(
-                    "assets/images/$weatherIcon.png",
-                    width: 40,
-                  )),
-            ],
-          ),
-          SizedBox(
-            height: size.height * 0.01,
-          ),
-          Text(
-            '$temp˚C',
-            style: GoogleFonts.questrial(
-              color: AppColor.txtMainColor,
-              fontSize: size.height * 0.025,
-            ),
-          ),
-          SizedBox(
-            height: size.height * 0.01,
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: size.height * 0.01,
-                ),
-                child: FaIcon(
-                  FontAwesomeIcons.wind,
-                  color: Colors.grey,
-                  size: size.height * 0.03,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: size.height * 0.01,
-          ),
-          Text(
-            '$wind km/h',
-            style: GoogleFonts.questrial(
-              color: Colors.grey,
-              fontSize: size.height * 0.02,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-Widget buildForecastToday(String time, int temp, String wind,
-    String weatherIcon, size, bool isDarkMode) {
-  return Padding(
-    padding: EdgeInsets.all(size.width * 0.025),
-    child: Column(
-      children: [
-        Text(
-          time,
-          style: GoogleFonts.questrial(
-            color: AppColor.txtMainColor,
-            fontSize: size.height * 0.02,
-          ),
-        ),
-        SizedBox(
-          height: size.height * 0.01,
-        ),
-        Row(
-          children: [
-            Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: size.height * 0.005,
-                ),
-                child: Image.asset(
-                  "assets/images/$weatherIcon.png",
-                  width: 40,
-                )),
-          ],
-        ),
-        SizedBox(
-          height: size.height * 0.01,
-        ),
-        Text(
-          '$temp˚C',
-          style: GoogleFonts.questrial(
-            color: AppColor.txtMainColor,
-            fontSize: size.height * 0.025,
-          ),
-        ),
-        SizedBox(
-          height: size.height * 0.01,
-        ),
-        Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: size.height * 0.01,
-              ),
-              child: FaIcon(
-                FontAwesomeIcons.wind,
-                color: Colors.grey,
-                size: size.height * 0.03,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: size.height * 0.01,
-        ),
-        Text(
-          '$wind km/h',
-          style: GoogleFonts.questrial(
-            color: Colors.grey,
-            fontSize: size.height * 0.02,
-          ),
-        ),
-      ],
-    ),
+Image getWeatherIcon(String _icon) {
+  String path = 'assets/images/';
+  String imageExtension = '.png';
+  return Image.asset(
+    path + _icon + imageExtension,
+    width: 70,
+    height: 70,
   );
 }
+
+Image getWeatherIconSmall(String _icon) {
+  String path = 'assets/images/';
+  String imageExtension = '.png';
+  return Image.asset(
+    path + _icon + imageExtension,
+    width: 40,
+    height: 40,
+  );
+}
+
+Widget hourlyBoxes(dynamic _forecast) {
+  return Container(
+      margin: EdgeInsets.symmetric(vertical: 0.0),
+      height: 150.0,
+      child: ListView.builder(
+          padding: const EdgeInsets.only(left: 8, top: 0, bottom: 0, right: 8),
+          scrollDirection: Axis.horizontal,
+          itemCount: _forecast.lenght,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+                padding: const EdgeInsets.only(
+                    left: 10, top: 15, bottom: 15, right: 10),
+                margin: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(18)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2,
+                        blurRadius: 2,
+                        offset: Offset(0, 1), // changes position of shadow
+                      )
+                    ]),
+                child: Column(children: [
+                  Text(
+                    "${_forecast.hourly[index].temp}°",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                        color: Colors.black),
+                  ),
+                  getWeatherIcon(_forecast.hourly[index].icon),
+                  Text(
+                    "${getTimeFromTimestamp(_forecast.hourly[index].dt)}",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        color: Colors.grey),
+                  ),
+                ]));
+          }));
+}
+
+String getTimeFromTimestamp(int timestamp) {
+  var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+  var formatter = new DateFormat('h:mm a');
+  return formatter.format(date);
+}
+
+String getDateFromTimestamp(int timestamp) {
+  var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+  var formatter = new DateFormat('E');
+  return formatter.format(date);
+}
+
+Widget dailyBoxes(dynamic _forcast) {
+  return Expanded(
+      child: ListView.builder(
+          shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
+          padding: const EdgeInsets.only(left: 8, top: 0, bottom: 0, right: 8),
+          itemCount: _forcast.daily.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+                padding: const EdgeInsets.only(
+                    left: 10, top: 5, bottom: 5, right: 10),
+                margin: const EdgeInsets.all(5),
+                child: Row(children: [
+                  Expanded(
+                      child: Text(
+                    "${getDateFromTimestamp(_forcast.daily[index].dt)}",
+                    style: TextStyle(fontSize: 14, color: Colors.black),
+                  )),
+                  Expanded(
+                      child: getWeatherIconSmall(_forcast.daily[index].icon)),
+                  Expanded(
+                      child: Text(
+                    "${_forcast.daily[index].high.toInt()}/${_forcast.daily[index].low.toInt()}",
+                    textAlign: TextAlign.right,
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  )),
+                ]));
+          }));
+}
+
+// class ForecastHourly extends StatelessWidget {
+//   final String time;
+//   final int temp;
+//   final String wind;
+//   final String weatherIcon;
+//   final Size size;
+//   final bool isDarkMode;
+//   const ForecastHourly(
+//       {Key? key,
+//       required this.time,
+//       required this.temp,
+//       required this.wind,
+//       required this.weatherIcon,
+//       required this.isDarkMode,
+//       required this.size})
+//       : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.all(size.width * 0.025),
+//       child: Column(
+//         children: [
+//           Text(
+//             time,
+//             style: GoogleFonts.questrial(
+//               color: AppColor.txtMainColor,
+//               fontSize: size.height * 0.02,
+//             ),
+//           ),
+//           SizedBox(
+//             height: size.height * 0.01,
+//           ),
+//           Row(
+//             children: [
+//               Padding(
+//                   padding: EdgeInsets.symmetric(
+//                     vertical: size.height * 0.005,
+//                   ),
+//                   child: Image.asset(
+//                     "assets/images/$weatherIcon.png",
+//                     width: 40,
+//                   )),
+//             ],
+//           ),
+//           SizedBox(
+//             height: size.height * 0.01,
+//           ),
+//           Text(
+//             '$temp˚C',
+//             style: GoogleFonts.questrial(
+//               color: AppColor.txtMainColor,
+//               fontSize: size.height * 0.025,
+//             ),
+//           ),
+//           SizedBox(
+//             height: size.height * 0.01,
+//           ),
+//           Row(
+//             children: [
+//               Padding(
+//                 padding: EdgeInsets.symmetric(
+//                   vertical: size.height * 0.01,
+//                 ),
+//                 child: FaIcon(
+//                   FontAwesomeIcons.wind,
+//                   color: Colors.grey,
+//                   size: size.height * 0.03,
+//                 ),
+//               ),
+//             ],
+//           ),
+//           SizedBox(
+//             height: size.height * 0.01,
+//           ),
+//           Text(
+//             '$wind km/h',
+//             style: GoogleFonts.questrial(
+//               color: Colors.grey,
+//               fontSize: size.height * 0.02,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+// Widget buildForecastToday(String time, int temp, String wind,
+//     String weatherIcon, size, bool isDarkMode) {
+//   return Padding(
+//     padding: EdgeInsets.all(size.width * 0.025),
+//     child: Column(
+//       children: [
+//         Text(
+//           time,
+//           style: GoogleFonts.questrial(
+//             color: AppColor.txtMainColor,
+//             fontSize: size.height * 0.02,
+//           ),
+//         ),
+//         SizedBox(
+//           height: size.height * 0.01,
+//         ),
+//         Row(
+//           children: [
+//             Padding(
+//                 padding: EdgeInsets.symmetric(
+//                   vertical: size.height * 0.005,
+//                 ),
+//                 child: Image.asset(
+//                   "assets/images/$weatherIcon.png",
+//                   width: 40,
+//                 )),
+//           ],
+//         ),
+//         SizedBox(
+//           height: size.height * 0.01,
+//         ),
+//         Text(
+//           '$temp˚C',
+//           style: GoogleFonts.questrial(
+//             color: AppColor.txtMainColor,
+//             fontSize: size.height * 0.025,
+//           ),
+//         ),
+//         SizedBox(
+//           height: size.height * 0.01,
+//         ),
+//         Row(
+//           children: [
+//             Padding(
+//               padding: EdgeInsets.symmetric(
+//                 vertical: size.height * 0.01,
+//               ),
+//               child: FaIcon(
+//                 FontAwesomeIcons.wind,
+//                 color: Colors.grey,
+//                 size: size.height * 0.03,
+//               ),
+//             ),
+//           ],
+//         ),
+//         SizedBox(
+//           height: size.height * 0.01,
+//         ),
+//         Text(
+//           '$wind km/h',
+//           style: GoogleFonts.questrial(
+//             color: Colors.grey,
+//             fontSize: size.height * 0.02,
+//           ),
+//         ),
+//       ],
+//     ),
+//   );
+// }

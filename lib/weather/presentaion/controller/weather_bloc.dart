@@ -47,16 +47,16 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         await getForecastWeatherByLocationUseCase(const NoParameters());
 
     result.fold(
-      (l) => emit(state.copyWith(
-        getForecastByLocationMessage: l.message,
-        getForecastByLocationState: StateRequest.error,
-      )),
-      (r) => emit(
+        (l) => emit(state.copyWith(
+              getForecastByLocationMessage: l.message,
+              getForecastByLocationState: StateRequest.error,
+            )), (r) {
+      emit(
         state.copyWith(
           getForecastByLocation: r,
           getForecastByLocationState: StateRequest.loaded,
         ),
-      ),
-    );
+      );
+    });
   }
 }
