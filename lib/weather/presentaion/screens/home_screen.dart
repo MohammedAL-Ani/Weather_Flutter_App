@@ -42,8 +42,6 @@ class WeatherContent extends StatelessWidget {
             previous.getWeatherByCityNameState !=
             current.getWeatherByCityNameState,
         builder: (context, state) {
-          print("BlocBuilder WeatherContentComponent");
-
           switch (state.getWeatherByCityNameState) {
             case StateRequest.loading:
               return const SizedBox(
@@ -182,113 +180,124 @@ class WeatherContent extends StatelessWidget {
                                     SizedBox(
                                       height: size.height * 0.05,
                                     ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: Column(
-                                          children: [
-                                            Container(
-                                                child: Text(
-                                              "Wind",
-                                              textAlign: TextAlign.left,
-                                              style: GoogleFonts.roboto(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20,
-                                                  color:
-                                                      AppColor.txtMainColor2),
-                                            )),
-                                            SizedBox(
-                                              height: size.height * 0.01,
-                                            ),
-                                            Container(
-                                                child: Text(
-                                              "${state.getWeatherByCityName!.wind} km/h",
-                                              textAlign: TextAlign.left,
-                                              style: GoogleFonts.roboto(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 15,
-                                                  color:
-                                                      AppColor.subMainColor2),
-                                            ))
-                                          ],
-                                        )),
-                                        Expanded(
-                                            child: Column(
-                                          children: [
-                                            Text(
-                                              "Humidity",
-                                              textAlign: TextAlign.left,
-                                              style: GoogleFonts.roboto(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20,
-                                                  color:
-                                                      AppColor.txtMainColor2),
-                                            ),
-                                            SizedBox(
-                                              height: size.height * 0.01,
-                                            ),
-                                            Text(
-                                              "${state.getWeatherByCityName!.humidity.toInt()}%",
-                                              textAlign: TextAlign.left,
-                                              style: GoogleFonts.roboto(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 15,
-                                                  color:
-                                                      AppColor.subMainColor2),
-                                            )
-                                          ],
-                                        )),
-                                        Expanded(
-                                            child: Column(
-                                          children: [
-                                            Text(
-                                              "Pressure",
-                                              textAlign: TextAlign.left,
-                                              style: GoogleFonts.roboto(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20,
-                                                  color:
-                                                      AppColor.txtMainColor2),
-                                            ),
-                                            SizedBox(
-                                              height: size.height * 0.01,
-                                            ),
-                                            Text(
-                                              "${state.getWeatherByCityName!.pressure} hPa",
-                                              textAlign: TextAlign.left,
-                                              style: GoogleFonts.roboto(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 15,
-                                                  color:
-                                                      AppColor.subMainColor2),
-                                            )
-                                          ],
-                                        ))
-                                      ],
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: size.width * 0.05,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: Column(
+                                            children: [
+                                              Text(
+                                                "Wind",
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.roboto(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20,
+                                                    color:
+                                                        AppColor.txtMainColor),
+                                              ),
+                                              SizedBox(
+                                                height: size.height * 0.01,
+                                              ),
+                                              Text(
+                                                "${state.getWeatherByCityName!.wind} km/h",
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.roboto(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 15,
+                                                    color:
+                                                        AppColor.subMainColor2),
+                                              )
+                                            ],
+                                          )),
+                                          Expanded(
+                                              child: Column(
+                                            children: [
+                                              Text(
+                                                "Humidity",
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.roboto(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20,
+                                                    color:
+                                                        AppColor.txtMainColor),
+                                              ),
+                                              SizedBox(
+                                                height: size.height * 0.01,
+                                              ),
+                                              Text(
+                                                "${state.getWeatherByCityName!.humidity.toInt()}%",
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.roboto(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 15,
+                                                    color:
+                                                        AppColor.subMainColor2),
+                                              )
+                                            ],
+                                          )),
+                                          Expanded(
+                                              child: Column(
+                                            children: [
+                                              Text(
+                                                "Pressure",
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.roboto(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20,
+                                                    color:
+                                                        AppColor.txtMainColor),
+                                              ),
+                                              SizedBox(
+                                                height: size.height * 0.01,
+                                              ),
+                                              Text(
+                                                "${state.getWeatherByCityName!.pressure} hPa",
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.roboto(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 15,
+                                                    color:
+                                                        AppColor.subMainColor2),
+                                              )
+                                            ],
+                                          ))
+                                        ],
+                                      ),
                                     ),
                                     SizedBox(
                                       height: size.height * 0.05,
                                     ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                          top: size.height * 0.01,
-                                          left: size.width * 0.03,
-                                        ),
-                                        child: Text(
-                                          'Forecast for today',
-                                          style: GoogleFonts.questrial(
-                                            color: isDarkMode
-                                                ? Colors.white
-                                                : AppColor.txtMainColor,
-                                            fontSize: size.height * 0.025,
-                                            fontWeight: FontWeight.bold,
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: size.width * 0.05,
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            top: size.height * 0.01,
+                                            left: size.width * 0.03,
+                                          ),
+                                          child: Text(
+                                            'Forecast for today',
+                                            style: GoogleFonts.questrial(
+                                              color: isDarkMode
+                                                  ? Colors.white
+                                                  : AppColor.txtMainColor,
+                                              fontSize: size.height * 0.025,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                     const ForecastHourlyComponents(),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
                                     const ForecastWeekDay(),
                                   ]),
                             ),
