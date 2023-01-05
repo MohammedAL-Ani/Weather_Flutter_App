@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:weather_flutter_app/core/services/services_locator.dart';
-import 'package:weather_flutter_app/weather/presentaion/screens/begin_screen.dart';
 
-import 'package:weather_flutter_app/weather/presentaion/screens/home_screen.dart';
+import 'package:weather_flutter_app/weather/presentaion/screens/begin_screen.dart';
+import 'package:weather_flutter_app/weather/presentaion/screens/components/animation/star.dart';
+import 'package:weather_flutter_app/weather/presentaion/screens/components/animation/sunbeam.dart';
 
 void main() {
   // BaseWeatherRemoteDataSource baseRemoteDataSource = WeatherRemoteDataSource();

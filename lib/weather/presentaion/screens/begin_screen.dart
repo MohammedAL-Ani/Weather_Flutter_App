@@ -41,7 +41,7 @@ class BeginScreen extends StatelessWidget {
                 child: MaterialButton(
                     shape: RoundedRectangleBorder(
                         borderRadius:
-                            BorderRadius.circular(size.height * 0.01)),
+                            BorderRadius.circular(size.height * 0.05)),
                     color: AppColor.subMainColor2,
                     onPressed: () {
                       Navigator.push(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_flutter_app/core/utils/constants.dart';
+import 'package:weather_flutter_app/weather/presentaion/screens/components/animation/star.dart';
 import 'package:weather_flutter_app/weather/presentaion/screens/components/forecast_hourly.dart';
 import 'package:weather_flutter_app/weather/presentaion/screens/components/forecast_weekday.dart';
 import 'package:weather_flutter_app/weather/presentaion/screens/components/toolbar_body.dart';
@@ -17,19 +18,53 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: BlocProvider(
-      create: (BuildContext context) => sl<WeatherBloc>()
-        ..add(GetWeatherByCountryNameEvent(cityName))
-        ..add(GetForecastWeatherByLocationEvent()),
-      lazy: false,
-      child: const WeatherContent(),
-    ));
+    final now = TimeOfDay.now();
+    final hour = now.hour;
+
+    if (hour < 6 || hour > 18) {
+      return Scaffold(
+          body: BlocProvider(
+        create: (BuildContext context) => sl<WeatherBloc>()
+          ..add(GetWeatherByCountryNameEvent(cityName))
+          ..add(GetForecastWeatherByLocationEvent()),
+        lazy: false,
+        child: Stack(children: [
+          StarAnimation(
+            weatherContent: WeatherContent(
+              boxDecorationState: nightBackgroundBoxDecoration(),
+            ),
+          ),
+        ]),
+      ));
+    } else if (hour < 18 && hour > 12) {
+      return Scaffold(
+          body: BlocProvider(
+        create: (BuildContext context) => sl<WeatherBloc>()
+          ..add(GetWeatherByCountryNameEvent(cityName))
+          ..add(GetForecastWeatherByLocationEvent()),
+        lazy: false,
+        child: WeatherContent(
+          boxDecorationState: sunsetBackgroundBoxDecoration(),
+        ),
+      ));
+    } else {
+      return Scaffold(
+          body: BlocProvider(
+              create: (BuildContext context) => sl<WeatherBloc>()
+                ..add(GetWeatherByCountryNameEvent(cityName))
+                ..add(GetForecastWeatherByLocationEvent()),
+              lazy: false,
+              child: WeatherContent(
+                boxDecorationState: dayBackgroundBoxDecoration(),
+              )));
+    }
   }
 }
 
 class WeatherContent extends StatelessWidget {
-  const WeatherContent({Key? key}) : super(key: key);
+  final BoxDecoration boxDecorationState;
+  const WeatherContent({Key? key, required this.boxDecorationState})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +90,7 @@ class WeatherContent extends StatelessWidget {
                   child: Container(
                       height: size.height,
                       width: size.height,
-                      decoration: dayBackgroundBoxDecoration(),
+                      decoration: boxDecorationState,
                       child: SafeArea(
                         child: Stack(
                           children: [
