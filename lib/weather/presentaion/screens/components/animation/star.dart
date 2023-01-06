@@ -5,9 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:weather_flutter_app/weather/presentaion/screens/home_screen.dart';
 
 class StarAnimation extends StatefulWidget {
-  final WeatherContent weatherContent;
-  const StarAnimation({Key? key, required this.weatherContent})
-      : super(key: key);
+  const StarAnimation({Key? key}) : super(key: key);
 
   @override
   StarAnimationState createState() => StarAnimationState();
@@ -53,7 +51,6 @@ class StarAnimationState extends State<StarAnimation>
                 // _controller.value,
               ),
             ),
-          widget.weatherContent
         ],
       ),
     );

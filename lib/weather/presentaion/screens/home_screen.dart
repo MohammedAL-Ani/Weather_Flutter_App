@@ -23,18 +23,18 @@ class HomeScreen extends StatelessWidget {
 
     if (hour < 6 || hour > 18) {
       return Scaffold(
-          body: BlocProvider(
-        create: (BuildContext context) => sl<WeatherBloc>()
-          ..add(GetWeatherByCountryNameEvent(cityName))
-          ..add(GetForecastWeatherByLocationEvent()),
-        lazy: false,
-        child: Stack(children: [
-          StarAnimation(
-            weatherContent: WeatherContent(
+          body: Stack(
+        children: [
+          BlocProvider(
+            create: (BuildContext context) => sl<WeatherBloc>()
+              ..add(GetWeatherByCountryNameEvent(cityName))
+              ..add(GetForecastWeatherByLocationEvent()),
+            lazy: false,
+            child: WeatherContent(
               boxDecorationState: nightBackgroundBoxDecoration(),
             ),
           ),
-        ]),
+        ],
       ));
     } else if (hour < 18 && hour > 12) {
       return Scaffold(
@@ -114,13 +114,6 @@ class WeatherContent extends StatelessWidget {
                                               '${state.getWeatherByCityName!.temp.toInt()}', //curent temperature
                                               style: GoogleFonts.questrial(
                                                 color: AppColor.txtMainColor,
-                                                // color: currTemp <= 0
-                                                //     ? Colors.blue
-                                                //     : currTemp > 0 && currTemp <= 15
-                                                //         ? Colors.indigo
-                                                //         : currTemp > 15 && currTemp < 30
-                                                //             ? Colors.deepPurple
-                                                //             : Colors.white,
                                                 fontSize: size.height * 0.13,
                                               ),
                                             ),
